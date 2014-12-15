@@ -3,23 +3,31 @@ window.SettingsManager = {
     var self = this
     Meteor.call('settings_conf_manager_getSettings', function(err, settings) {
       if (err) {
-        return console.error('Error while fetching Meteor settings from server', err)
+        return swal('Error while fetching Meteor settings from server', err, 'error')
       }
+      // save settings to we can later update them
       self.settings = settings
 
       swal.withForm({
         title: 'Update your settings',
+        text: 'This will update both client and server settings. Changes will be lost on app restart',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Update',
+        closeOnConfirm: false,
         formFields: self.toFormFields(settings)
       }, function(isConfirm) {
         if (isConfirm) {
           var newSettings = self.toSettingsJson(this.swalForm)
+          // update client settings
           _.extend(Meteor.settings.public, newSettings.public)
+          // update setting on the server
           Meteor.call('settings_conf_manager_updateSettings', newSettings, function(err, res) {
             if (err) {
-              return console.log('Error updating Meteor settings on the server', err)
+              return swal('Error updating Meteor settings on the server', err, 'error')
             }
 
-            console.log(res)
+            swal('Success updating Meteor.settings', '', 'success')
           })
         }
       })

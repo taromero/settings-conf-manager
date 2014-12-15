@@ -1,7 +1,7 @@
 Package.describe({
   name: 'canotto90:settings-conf-manager',
   summary: 'Lets you see and change app settings (both public and private)',
-  version: '0.1.0',
+  version: '0.1.1',
   git: 'https://github.com/taromero/settings-conf-manager',
   debugOnly: true
 })
